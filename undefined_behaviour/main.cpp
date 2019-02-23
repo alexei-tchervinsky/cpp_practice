@@ -13,7 +13,10 @@ int main(void)
 /*3.*/ i = 7, i++, i++; //well defined
 /*4.*/ i = i + 1; //well defined
 /*5.*/ i = ++i; //preincrement undefined too
-/*6.*/ int j = i << -2; //undefined сдвиг на отрицательное число разрядов
+    /*5'*/ int x = ++i + i++;
+    /*6.*/ int j = i << -2; //undefined сдвиг на отрицательное число разрядов
 /*7.*/ int k = i >> -2; //undefined сдвиг на отрицательное число разрядов
+/*8.*/ uint32_t u = 0; u <<= 32;
+    
   return 0;
 }
