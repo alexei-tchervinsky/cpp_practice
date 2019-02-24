@@ -1,5 +1,7 @@
 // undefined behaviour
-//
+// Блог на русском языке о точках следования (sequence point) и неопределенном поведениие (undefined behaviour)
+// http://alenacpp.blogspot.com/2005/11/sequence-points.html/
+
 #include <iostream>
 
 class IntExample
