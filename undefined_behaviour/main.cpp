@@ -65,9 +65,12 @@ int main(void)
 
 /*1.*/ i = v[i++]; //undefined
 /*2.*/ i = i++; //undefined
+/*2'.*/ i = i--; //undefined
 /*3.*/ i = 7, i++, i++; //well defined
-/*4.*/ i = i + 1; //well defined
-/*5.*/ i = ++i; //preincrement undefined too
+/*4.*/ i = i + 1; //well defined НАДО ДЕЛАТЬ ТАК во избежании путаницы с pre- и post инкрементом
+/*5.*/ i = ++i; //well defined
+// https://stackoverflow.com/questions/14005508/so-why-is-i-i-1-well-defined-in-c11
+// https://www.reddit.com/r/cpp_questions/comments/3au94b/why_is_i_i_1_undefined_but_i_i_1_well_defined
 /*5'*/ int x = ++i + i++; // undefined
 /*6.*/ int j = i << -2; //undefined сдвиг на отрицательное число разрядов
 /*7.*/ int k = i >> -2; //undefined сдвиг на отрицательное число разрядов
@@ -75,9 +78,9 @@ int main(void)
 /*9.*/ f(i, i++); //undefined порядок вычисления аргументов функции не определен (unspecified behavior в данном случае приводит к undefined)
 /*10.*/ i = 10;
         IntExample ie(i); // class! 
-        ie = ++ie;  // well defined preincrement поскольку перегруженные операторы декремента и инкремента эквивалентны операторам  +=  и  -= 
+        ie = ie++;  // well defined preincrement поскольку перегруженные операторы декремента и инкремента эквивалентны операторам  +=  и  -= 
         std::cout << __LINE__ << " ie: " << ie.getValue() << std::endl; // Вместо getValue() нужно перегрузить оператор  <<   
-        ie = ie++; // well defined
+        ie = ++ie; // well defined
         std::cout << __LINE__ << " ie: " << ie << std::endl; // перегружен оператор <<    
 
 /*
