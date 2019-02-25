@@ -35,10 +35,11 @@ class IntExample
     return *this;
   }
   // перегруженный оператор postincrement (в скобках неиспользуемый int - определяет пост-инкремент)
-  IntExample & operator++(int)
+  IntExample  operator++(int)
   {
-    i_++;
-    return *this;
+    IntExample tmp = *this;
+    ++(*this);
+    return tmp; // return value before increment
   }
   // перегруженный оператор вывода -  friend для доступа к private полю
   friend std::ostream& operator <<(std::ostream &out, const IntExample &ie)
@@ -68,7 +69,7 @@ int main(void)
 /*2'.*/ i = i--; //undefined
 /*3.*/ i = 7, i++, i++; //well defined
 /*4.*/ i = i + 1; //well defined НАДО ДЕЛАТЬ ТАК во избежании путаницы с pre- и post инкрементом
-/*5.*/ i = ++i; //well defined в C+11 preincrement, predecrement поскольку эквивалентны операторам  +=  и  -= 
+/*5.*/ i = ++i; //undefined, но well defined в C+11 preincrement, predecrement поскольку эквивалентны операторам  +=  и  -= 
 // https://stackoverflow.com/questions/14005508/so-why-is-i-i-1-well-defined-in-c11
 // https://www.reddit.com/r/cpp_questions/comments/3au94b/why_is_i_i_1_undefined_but_i_i_1_well_defined
 /*5'*/ int x = ++i + i++; // undefined
@@ -79,11 +80,12 @@ int main(void)
 /*9'.*/ f(0, i++); //well defined: 'i' используется только один раз, нарушения точек следования нет
 /*10.*/ i = 10;
         IntExample ie(i); // class! 
-        ie = ie++;  // well defined preincrement поскольку перегруженные операторы декремента и инкремента работают по правилам функций: сначала делаем инкремент, а потом присваиваем 
+        ie = ie++;  // well defined preincrement поскольку перегруженные операторы декремента и инкремента работают по правилам функций: сначала делаем копию, затем делаем инкремент, затем возвращаем прежнее значение и присваиваем его
         std::cout << __LINE__ << " ie: " << ie.getValue() << std::endl; // Вместо getValue() нужно перегрузить оператор  <<   
-        ie = ++ie; // well defined
+        ie = ++ie; // well defined сначала делаем инкремент, затем присваиваем
         std::cout << __LINE__ << " ie: " << ie << std::endl; // перегружен оператор <<    
-
+        ie++; // инкремент без присвоения - увеличиваем значение
+        std::cout << __LINE__ << " ie: " << ie << std::endl; // перегружен оператор <<    
 /*
  Из блога Елены Сагалаевой и лекции Алексея Валерьевича:
  http://alenacpp.blogspot.com/2005/11/sequence-points.html/
